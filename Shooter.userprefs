@@ -1,0 +1,21 @@
+﻿<Properties StartupItem="Assembly-CSharp.csproj">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\CreateSceneHandler.cs">
+    <Files>
+      <File FileName="Assets\Scripts\CreateSceneHandler.cs" Line="31" Column="1" />
+      <File FileName="Assets\Scripts\StartSceneHandler.cs" Line="116" Column="34" />
+      <File FileName="Assets\Scripts\SelectSceneHandler.cs" Line="26" Column="12" />
+      <File FileName="Assets\Scripts\SocketConnector.cs" Line="148" Column="30" />
+      <File FileName="Assets\Scripts\Player.cs" Line="67" Column="38" />
+      <File FileName="Assets\Scripts\Processor.cs" Line="35" Column="3" />
+      <File FileName="Assets\Scripts\Messages.cs" Line="51" Column="21" />
+      <File FileName="Assets\Scripts\Role.cs" Line="4" Column="22" />
+    </Files>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches>
+    <Watch file="Assets\SelectGun.cs" line="12" offsetX="473" offsetY="176" expression="gunList[0]" liveUpdate="False" />
+  </MonoDevelop.Ide.DebuggingService.PinnedWatches>
+</Properties>
