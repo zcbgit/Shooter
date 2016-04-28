@@ -15,13 +15,11 @@ public class SelectSceneHandler : MonoBehaviour {
 	private Button m_create;
 	private Button m_Ok, m_cancel;
 	private Text m_headerText, m_dialogText;
-	private SocketConnector client;
 	private Player player;
 
 	// Use this for initialization
 	void Start () {
 		HideDialog ();
-		client = SocketConnector.GetInstance ();
 		player = Player.GetInstance ();
 		InitItems ();
 		UpdateItems ();
@@ -31,9 +29,8 @@ public class SelectSceneHandler : MonoBehaviour {
 
 	private int Respone(){
 		while (true) {
-			if (client.messages.Count > 0) {
-				JsonData data = client.messages [0];
-				client.messages.RemoveAt (0);
+			JsonData data = player.Receive();
+			if (data != null) {
 				string msgname = (string)data ["msgname"];
 				if ("Respone".Equals(msgname)) {
 					int errcode = (int)data ["errcode"];
@@ -51,9 +48,8 @@ public class SelectSceneHandler : MonoBehaviour {
 
 	private int AcquireRoles(){
 		while (true) {
-			if (client.messages.Count > 0) {
-				JsonData data = client.messages [0];
-				client.messages.RemoveAt (0);
+			JsonData data = player.Receive();
+			if (data != null) {
 				string msgname = (string)data ["msgname"];
 				if ("Roles".Equals(msgname)){
 					player.SetRoles (data ["roles"]);
@@ -70,19 +66,18 @@ public class SelectSceneHandler : MonoBehaviour {
 	public void DeleteRole() {
 		ShowDialog("删除角色", "确定要删除角色吗？", true);
 		string data = Processor.C2SDeleteRole (player.userId, player.roles [player.selectedRole].id);
-		if (!client.IsConnected()) {
-			if (!client.Connect ("127.0.0.1", 8888)) {
-				Debug.LogError ("Connected failed!");
-				ShowDialog ("删除角色", "无法连接到服务器！", true, () => {
-					HideDialog ();
-				}, () => {
-					HideDialog ();
-				});
-				return;
-			}
+		if (!player.IsLogined()) {
+			Debug.LogError ("player do not login!");
+			ShowDialog ("删除角色", "与服务器断开或用户未登陆！", true, () => {
+				player.Logout ();
+				SceneManager.LoadScene ("start");
+			}, () => {
+				player.Logout ();
+				SceneManager.LoadScene ("start");
+			});
 		}
 		ShowDialog("删除角色", "处理中...", false);
-		client.Send (data);
+		player.Send (data);
 		AsyncMethodCaller caller = new AsyncMethodCaller(Respone);
 		IAsyncResult result = caller.BeginInvoke(null, null);
 		bool success = result.AsyncWaitHandle.WaitOne (5000, true);
@@ -109,10 +104,11 @@ public class SelectSceneHandler : MonoBehaviour {
 			Debug.Log ("Success!");
 			ShowDialog ("删除角色", "操作成功！", true, () => {
 				HideDialog ();
+				UpdateItems ();
 			}, () => {
 				HideDialog ();
+				UpdateItems ();
 			});
-			UpdateItems ();
 		}
 	}
 
@@ -126,18 +122,50 @@ public class SelectSceneHandler : MonoBehaviour {
 					switch (b.name) {
 					case "btn_select":
 						if (b.onClick.GetPersistentEventCount() == 0) {
-							b.onClick.AddListener (() => {
-								player.selectedRole = i;
-								SceneManager.LoadScene ("game");
-							});
+							switch (i) {
+							case 0:
+								b.onClick.AddListener (() => {
+									player.selectedRole = 0;
+									SceneManager.LoadScene ("game");
+								});
+								break;
+							case 1:
+								b.onClick.AddListener (() => {
+									player.selectedRole = 1;
+									SceneManager.LoadScene ("game");
+								});
+								break;
+							case 2:
+								b.onClick.AddListener (() => {
+									player.selectedRole = 2;
+									SceneManager.LoadScene ("game");
+								});
+								break;
+							}
 						}
 						break;
 					case "btn_delete":
 						if (b.onClick.GetPersistentEventCount() == 0) {
-							b.onClick.AddListener (() => {
-								player.selectedRole = i;
-								DeleteRole ();
-							});
+							switch (i) {
+							case 0:
+								b.onClick.AddListener (() => {
+									player.selectedRole = 0;
+									DeleteRole ();
+								});
+								break;
+							case 1:
+								b.onClick.AddListener (() => {
+									player.selectedRole = 1;
+									DeleteRole ();
+								});
+								break;
+							case 2:
+								b.onClick.AddListener (() => {
+									player.selectedRole = 2;
+									DeleteRole ();
+								});
+								break;
+							}
 						}
 						break;							
 					}
@@ -154,16 +182,29 @@ public class SelectSceneHandler : MonoBehaviour {
 	}
 
 	private void UpdateItems() {
+		if (!player.IsLogined()) {
+			Debug.LogError ("player do not login!");
+			ShowDialog ("获取角色", "与服务器断开或用户未登陆！", true, () => {
+				player.Logout ();
+				SceneManager.LoadScene ("start");
+			}, () => {
+				player.Logout ();
+				SceneManager.LoadScene ("start");
+			});
+		}
+		ShowDialog("获取角色", "处理中...", false);
+		string data = Processor.C2SGetRoles (player.userId);
+		player.Send (data);
 		AsyncMethodCaller caller = new AsyncMethodCaller(AcquireRoles);
 		IAsyncResult result = caller.BeginInvoke(null, null);
 		bool success = result.AsyncWaitHandle.WaitOne (5000, true);
 		if (!success) {
 			Debug.Log ("Time Out");
 			ShowDialog ("获取角色", "获取已创建角色失败！", true, () => {
-				client.Disconnect();
+				player.Logout();
 				SceneManager.LoadScene("start");
 			}, () => {
-				client.Disconnect();
+				player.Logout();
 				SceneManager.LoadScene("start");
 			});
 		} else {
@@ -191,6 +232,7 @@ public class SelectSceneHandler : MonoBehaviour {
 			}
 		}
 		result.AsyncWaitHandle.Close();
+		HideDialog ();
 	} 
 
 	private void ShowDialog(string headerText, string dialogText, bool showButton = false, UnityAction OKListener = null, UnityAction cancelListener = null){

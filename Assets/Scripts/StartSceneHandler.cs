@@ -17,14 +17,12 @@ public class StartSceneHandler : MonoBehaviour {
 	private GameObject m_cancel;
 	private Text m_headerText;
 	private Text m_dialogText;
-	private SocketConnector client;
 
 	// Use this for initialization
 	void Start () {
 		HideDialog ();
 		m_btnLogin.onClick.AddListener (TryLogin);
 		m_btnRigister.onClick.AddListener (TryRegister);
-		client = SocketConnector.GetInstance ();
 		player = Player.GetInstance ();
 	}
 	
@@ -38,15 +36,15 @@ public class StartSceneHandler : MonoBehaviour {
 			return;
 		}
 		string data = Processor.C2SLogin (userid, password);
-		if (!client.IsConnected()) {
-			if (!client.Connect ("127.0.0.1", 8888)) {
+		if (!player.IsConnected()) {
+			if (!player.Connect ("127.0.0.1", 8888)) {
 				Debug.LogError ("Connected failed!");
 				ShowDialog ("登陆", "无法连接到服务器！", true);
 				return;
 			}
 		}
 		ShowDialog("登陆", "处理中...", false);
-		client.Send (data);
+		player.Send (data);
 		AsyncMethodCaller caller = new AsyncMethodCaller(Respone);
 		IAsyncResult result = caller.BeginInvoke(null, null);
 		bool success = result.AsyncWaitHandle.WaitOne (5000, true);
@@ -79,21 +77,20 @@ public class StartSceneHandler : MonoBehaviour {
 			return;
 		}
 		string data = Processor.C2SRegister (userid, password);
-		if (!client.IsConnected()) {
-			if (!client.Connect ("127.0.0.1", 8888)) {
-				Debug.LogError ("Connected failed!");
+		if (!player.IsConnected()) {
+			if (!player.Connect ("127.0.0.1", 8888)) {
 				ShowDialog ("注册", "无法连接到服务器！", true);
 				return;
 			}
 		}
 		ShowDialog("注册", "处理中...", false);
-		client.Send (data);
+		player.Send (data);
+		Debug.LogError (data);
 		AsyncMethodCaller caller = new AsyncMethodCaller(Respone);
 		IAsyncResult result = caller.BeginInvoke(null, null);
 		bool success = result.AsyncWaitHandle.WaitOne (5000, true);
 		if (!success) {
 			ShowDialog ("注册", "注册超时", true);
-			Debug.Log ("Time Out");
 		} else {
 			int returnValue = caller.EndInvoke(result);
 			if (returnValue != 0) {
@@ -104,16 +101,14 @@ public class StartSceneHandler : MonoBehaviour {
 		result.AsyncWaitHandle.Close();
 		m_password.text = "";
 		if (success) {
-			Debug.Log ("Success!");
 			ShowDialog ("注册", "注册成功！请登录！", true);
 		}
 	}
 
 	private int Respone(){
 		while (true) {
-			if (client.messages.Count > 0) {
-				JsonData data = client.messages [0];
-				client.messages.RemoveAt (0);
+			JsonData data = player.Receive ();
+			if (data != null) {
 				string msgname = (string)data ["msgname"];
 				if ("Respone".Equals (msgname)) {
 					int errcode = (int)data ["errcode"];

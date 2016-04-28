@@ -15,7 +15,6 @@ public class CreateSceneHandler : MonoBehaviour {
 	private InputField ipf_name, ipf_bullet;
 	private Toggle tge_bullet;
 
-	private SocketConnector client;
 	private Player player;
 	private Role role;
 	private GameObject[] gunList;
@@ -23,7 +22,6 @@ public class CreateSceneHandler : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		client = SocketConnector.GetInstance ();
 		player = Player.GetInstance ();
 		role = new Role ();
 		index = 0;
@@ -139,20 +137,18 @@ public class CreateSceneHandler : MonoBehaviour {
 		role.ammunition = tge_bullet.isOn ? -1 : int.Parse (ipf_bullet.text);
 		string data = Processor.C2SCreateRole (player.userId, role);
 		Debug.Log (data);
-		if (!client.IsConnected()) {
-			if (!client.Connect ("127.0.0.1", 8888)) {
-				Debug.LogError ("Connected failed!");
-				ShowDialog ("创建角色", "无法连接到服务器！", true, () => {
-					HideDialog ();
-				}, () => {
-					HideDialog ();
-				});
-				gunList [index].SetActive (true);
-				return;
-			}
+		if (!player.IsLogined()) {
+			Debug.LogError ("player do not login!");
+			ShowDialog ("删除角色", "与服务器断开或用户未登陆！", true, () => {
+				player.Logout ();
+				SceneManager.LoadScene ("start");
+			}, () => {
+				player.Logout ();
+				SceneManager.LoadScene ("start");
+			});
 		}
 		ShowDialog("创建角色", "处理中...", false);
-		client.Send (data);
+		player.Send (data);
 		AsyncMethodCaller caller = new AsyncMethodCaller(Respone);
 		IAsyncResult result = caller.BeginInvoke(null, null);
 		bool success = result.AsyncWaitHandle.WaitOne (5000, true);
@@ -191,9 +187,8 @@ public class CreateSceneHandler : MonoBehaviour {
 
 	private int Respone(){
 		while (true) {
-			if (client.messages.Count > 0) {
-				JsonData data = client.messages [0];
-				client.messages.RemoveAt (0);
+			JsonData data = player.Receive();
+			if (data != null) {
 				string msgname = (string)data ["msgname"];
 				if ("Respone".Equals(msgname)) {
 					int errcode = (int)data ["errcode"];

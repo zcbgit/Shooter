@@ -134,7 +134,7 @@ public class SocketConnector
 
 				for (int i = 0; i < length; ++i)
 					data [i] = recvBuff [index++];
-				string msg = Encoding.GetEncoding ("GBK").GetString (data);
+				string msg = Encoding.UTF8.GetString (data);
 				JsonData jsonData = JsonMapper.ToObject(msg);
 				messages.Add (jsonData);
 				recvBuff.RemoveRange (beg, index - beg);
@@ -152,7 +152,7 @@ public class SocketConnector
 			return;
 		}
 
-		byte[] msg = Encoding.GetEncoding ("GBK").GetBytes (str);
+		byte[] msg = Encoding.UTF8.GetBytes (str);
 		byte[] len = System.BitConverter.GetBytes (msg.Length);
 		for (int i = 0; i < HEADLEN; ++i)
 			sendBuff.Add(len [HEADLEN - 1 - i]);

@@ -61,7 +61,6 @@ public class Player{
 		this.isLogined = false;
 		selectedRole = -1;
 		roles.Clear ();
-		connector.Disconnect ();
 	}
 
 	public void SetRoles(JsonData data){
@@ -80,6 +79,15 @@ public class Player{
 			Debug.Log (r);
 			roles.Add (r);
 		}
+	}
+
+	public void Disconnect(){
+		Logout ();
+		connector.Disconnect ();
+	}
+
+	public void Closed(){
+		connector.Closed ();
 	}
 
 	public Role GetSelectedRole() {

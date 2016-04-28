@@ -40,6 +40,17 @@ namespace Messages
 	}
 
 	[System.Serializable]
+	public class GetRoles
+	{
+		public const string msgname = "GetRoles";
+		public string userId;
+
+		public GetRoles(string userId){
+			this.userId = userId;
+		}
+	}
+
+	[System.Serializable]
 	public class CreateRole
 	{
 		public const string msgname = "CreateRole";

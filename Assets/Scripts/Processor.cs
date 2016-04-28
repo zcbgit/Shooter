@@ -24,6 +24,11 @@ public class Processor {
 		return JsonMapper.ToJson (data);
 	}
 
+	public static string C2SGetRoles(string userId){
+		GetRoles data = new GetRoles (userId);
+		return JsonMapper.ToJson (data);
+	}
+
 	public static string C2SCreateRole(string userId, Role role){
 		CreateRole data = new CreateRole (userId, role);
 		return JsonMapper.ToJson (data);
