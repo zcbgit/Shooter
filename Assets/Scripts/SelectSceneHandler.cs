@@ -27,12 +27,33 @@ public class SelectSceneHandler : MonoBehaviour {
 
 	private delegate int AsyncMethodCaller();
 
-	private int Respone(){
+	private int DeleteRoleRespone(){
 		while (true) {
 			JsonData data = player.Receive();
 			if (data != null) {
 				string msgname = (string)data ["msgname"];
-				if ("Respone".Equals(msgname)) {
+				string resmsgname = (string)data ["resmsgname"];
+				if ("Respone".Equals(msgname) && "DeleteRole".Equals(resmsgname)) {
+					int errcode = (int)data ["errcode"];
+					string errmsg = (string)data ["errmsg"];
+					if (errcode != 0) {
+						Debug.Log (string.Format ("errcode[{0}], errmsg[{0}]", errcode, errmsg));
+					} else {
+						Debug.Log ("Login success!");
+					}
+					return errcode;
+				}
+			}
+		}
+	}
+
+	private int EnterGameRespone(){
+		while (true) {
+			JsonData data = player.Receive();
+			if (data != null) {
+				string msgname = (string)data ["msgname"];
+				string resmsgname = (string)data ["resmsgname"];
+				if ("Respone".Equals(msgname) && "EnterGame".Equals(resmsgname)) {
 					int errcode = (int)data ["errcode"];
 					string errmsg = (string)data ["errmsg"];
 					if (errcode != 0) {
@@ -63,6 +84,48 @@ public class SelectSceneHandler : MonoBehaviour {
 		SceneManager.LoadScene("create");
 	}
 
+	public void EnterGame() {
+		player.roleId = player.roles [player.selectedRole].id;
+		string data = Processor.C2SEnterGame (player.userId, player.roles [player.selectedRole].id);
+		if (!player.IsLogined()) {
+			Debug.LogError ("player do not login!");
+			ShowDialog ("进入游戏", "与服务器断开或用户未登陆！", true, () => {
+				player.Logout ();
+				SceneManager.LoadScene ("start");
+			}, () => {
+				player.Logout ();
+				SceneManager.LoadScene ("start");
+			});
+		}
+		ShowDialog("进入游戏", "处理中...", false);
+		player.Send (data);
+		AsyncMethodCaller caller = new AsyncMethodCaller(EnterGameRespone);
+		IAsyncResult result = caller.BeginInvoke(null, null);
+		bool success = result.AsyncWaitHandle.WaitOne (5000, true);
+		if (!success) {
+			Debug.Log ("Time Out");
+			ShowDialog ("进入游戏", "操作超时", true, () => {
+				HideDialog ();
+			}, () => {
+				HideDialog ();
+			});
+		} else {
+			int returnValue = caller.EndInvoke(result);
+			if (returnValue != 0) {
+				success = false;
+				ShowDialog ("进入游戏", "操作失败", true, () => {
+					HideDialog ();
+				}, () => {
+					HideDialog ();
+				});
+			}
+		}
+		result.AsyncWaitHandle.Close();
+		if (success) {
+			SceneManager.LoadScene ("game");
+		}
+	}
+
 	public void DeleteRole() {
 		ShowDialog("删除角色", "确定要删除角色吗？", true);
 		string data = Processor.C2SDeleteRole (player.userId, player.roles [player.selectedRole].id);
@@ -78,7 +141,7 @@ public class SelectSceneHandler : MonoBehaviour {
 		}
 		ShowDialog("删除角色", "处理中...", false);
 		player.Send (data);
-		AsyncMethodCaller caller = new AsyncMethodCaller(Respone);
+		AsyncMethodCaller caller = new AsyncMethodCaller(DeleteRoleRespone);
 		IAsyncResult result = caller.BeginInvoke(null, null);
 		bool success = result.AsyncWaitHandle.WaitOne (5000, true);
 		if (!success) {
@@ -126,19 +189,19 @@ public class SelectSceneHandler : MonoBehaviour {
 							case 0:
 								b.onClick.AddListener (() => {
 									player.selectedRole = 0;
-									SceneManager.LoadScene ("game");
+									EnterGame();
 								});
 								break;
 							case 1:
 								b.onClick.AddListener (() => {
 									player.selectedRole = 1;
-									SceneManager.LoadScene ("game");
+									EnterGame();
 								});
 								break;
 							case 2:
 								b.onClick.AddListener (() => {
 									player.selectedRole = 2;
-									SceneManager.LoadScene ("game");
+									EnterGame();
 								});
 								break;
 							}

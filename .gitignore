@@ -48,6 +48,9 @@ Temporary Items
 *.exe
 *.pdb
 obj/
+Library/metadata/
 Library/ShaderCache/
 Library/ScriptAssemblies/
 shooter_Data/
+*.csproj
+*.csproj

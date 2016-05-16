@@ -1,5 +1,5 @@
 ﻿using UnityEngine;
-using System.Collections;
+using System.Collections.Generic;
 using System.Reflection;
 using LitJson;
 using Messages;
@@ -36,6 +36,26 @@ public class Processor {
 
 	public static string C2SDeleteRole(string userId, int roleId){
 		DeleteRole data = new DeleteRole (userId, roleId);
+		return JsonMapper.ToJson (data);		
+	}
+
+	public static string C2SEnterGame(string userId, int roleId) {
+		EnterGame data = new EnterGame (userId, roleId);
+		return JsonMapper.ToJson (data);
+	}
+
+	public static string C2SPlayerData(string userId, int roleId, GameObject player){
+		PlayerData data = new PlayerData (userId, roleId, player);
+		return JsonMapper.ToJson (data);		
+	}
+
+	public static string C2SEnemyData(string userId, int id, GameObject enemy){
+		EnemyData data = new EnemyData (userId, id, enemy);
+		return JsonMapper.ToJson (data);		
+	}
+
+	public static string C2SDamage(int type, int victim, int id){
+		Damage data = new Damage (type, victim, id);
 		return JsonMapper.ToJson (data);		
 	}
 

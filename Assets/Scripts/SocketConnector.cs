@@ -35,7 +35,6 @@ public class SocketConnector
 	private const int HEADLEN = 4;
 	private Socket clientSocket;
 	private List<byte> recvBuff;
-	private List<byte> sendBuff;
 	public List<JsonData> messages;
 
 	private static SocketConnector instance =  new SocketConnector ();
@@ -49,7 +48,6 @@ public class SocketConnector
 	{
 		clientSocket = new Socket (AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
 		recvBuff = new List<byte> ();
-		sendBuff = new List<byte> ();
 		messages = new List<JsonData> ();
 	}
 
@@ -152,18 +150,15 @@ public class SocketConnector
 			return;
 		}
 
-		byte[] msg = Encoding.UTF8.GetBytes (str);
-		byte[] len = System.BitConverter.GetBytes (msg.Length);
-		for (int i = 0; i < HEADLEN; ++i)
-			sendBuff.Add(len [HEADLEN - 1 - i]);
-
-		sendBuff.AddRange (msg);
-
-		StateObject so = new StateObject (clientSocket, sendBuff, 2048);
-		so.count = so.data.Count > 2048 ? 2048 : so.data.Count;
-		so.data.CopyTo (0, so.buffer, 0, so.count);
 		try {
-			clientSocket.BeginSend (so.buffer, 0,  so.count, SocketFlags.None, new AsyncCallback (sendCallback), so);
+			List<byte> sendBuff = new List<byte> ();
+			byte[] msg = Encoding.UTF8.GetBytes (str);
+			byte[] len = System.BitConverter.GetBytes (msg.Length);
+			for (int i = 0; i < HEADLEN; ++i)
+				sendBuff.Add(len [HEADLEN - 1 - i]);
+
+			sendBuff.AddRange (msg);
+			clientSocket.BeginSend (sendBuff.ToArray(), 0,  sendBuff.Count, SocketFlags.None, new AsyncCallback (sendCallback), clientSocket);
 		} catch {
 			Debug.Log ("send message error");
 		}
@@ -171,19 +166,9 @@ public class SocketConnector
 
 	private void sendCallback (IAsyncResult ar)
 	{
-		StateObject so = (StateObject)ar.AsyncState;
-		Socket s = so.workSocket;
-
-		so.count = s.EndSend (ar);
-
-		so.data.RemoveRange (0, so.count);
-		Debug.Log (String.Format("Send {0} bytes to server!", so.count));
-
-		if (so.data.Count > 0) {
-			so.count = so.data.Count > 2048 ? 2048 : so.data.Count;
-			so.data.CopyTo (0, so.buffer, 0, so.count);
-			s.BeginSend (so.buffer, 0, so.count, SocketFlags.None, new AsyncCallback (sendCallback), so);
-		}
+		Socket s = (Socket)ar.AsyncState;
+		int count = s.EndSend (ar);
+		Debug.Log (String.Format("Send {0} bytes to server!", count));
 	}
 
 	public void Disconnect(){

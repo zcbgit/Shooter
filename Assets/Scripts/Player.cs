@@ -6,6 +6,7 @@ public class Player{
 	public string userId;
 	public List<Role> roles;
 	public int selectedRole;
+	public int roleId;
 
 	private SocketConnector connector;
 	private bool isLogined;
