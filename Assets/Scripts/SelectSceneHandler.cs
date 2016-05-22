@@ -277,7 +277,7 @@ public class SelectSceneHandler : MonoBehaviour {
 				if (i < roles.Count) {
 					Text[] texts = item.GetComponentsInChildren<Text> ();
 					string name = roles [i].name;
-					string description = string.Format("level:{0,4}   HP:{1}\narmor:{2,3}   weapon:{3}\nattack:{4,3}   ammunition:{5}",roles [i].level, roles [i].blood, roles [i].armor, roles [i].weapon, roles [i].attack, roles [i].ammunition);
+					string description = string.Format("level:{0,4}   HP:{1}\narmor:{2,3}   weapon:{3}\nattack:{4,3}   ammunition:{5}",roles [i].level, roles [i].maxHP, roles [i].exp, roles [i].weapon, roles [i].attack, roles [i].ammunition);
 					foreach (Text t in texts) {
 						switch (t.name) {
 						case "name":

@@ -59,6 +59,11 @@ public class Processor {
 		return JsonMapper.ToJson (data);		
 	}
 
+	public static string C2SGetEquipment() {
+		GetEquipment data = new GetEquipment ();
+		return JsonMapper.ToJson (data);	
+	}
+
 	public static void Process(JsonData data)
 	{
 		string msgname = "S2C" + (string)data ["msgname"];

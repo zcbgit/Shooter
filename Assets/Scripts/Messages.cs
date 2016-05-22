@@ -90,9 +90,8 @@ namespace Messages
 			this.userId = userId;
 			this.roleId = roleId;
 			data = new List<double> ();
-			float HP = player.GetComponent<Health> ().HP;
 			Vector3 postion = player.transform.position;
-			data.Add (HP); data.Add (postion.x);data.Add (postion.y);
+			data.Add (postion.x);data.Add (postion.y);
 		}
 	}
 
@@ -106,14 +105,13 @@ namespace Messages
 		public EnemyData(string userId, int id, GameObject enemy){
 			this.userId = userId;
 			data = new List<double> ();
-			float HP = enemy.GetComponent<Health> ().HP;
 			Vector3 postion = enemy.transform.position;
 			int type = 0;
 			if ("Spider".Equals (enemy.tag))
 				type = 0;
 			else if ("Mech".Equals (enemy.tag))
 				type = 1;
-			data.Add (type); data.Add (id); data.Add (HP); data.Add (postion.x);data.Add (postion.y);
+			data.Add (type); data.Add (id); data.Add (postion.x);data.Add (postion.y);
 		}
 	}
 
@@ -143,6 +141,12 @@ namespace Messages
 			this.userId = userId;
 			this.roleId = roleId;
 		}
+	}
+
+	[System.Serializable]
+	public class GetEquipment
+	{
+		public const string msgname = "GetEquipment";
 	}
 }
 

@@ -1,17 +1,21 @@
 ﻿<Properties StartupItem="Assembly-CSharp.csproj">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\Manager.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\DoorControler.cs">
     <Files>
-      <File FileName="Assets\Scripts\SocketConnector.cs" Line="171" Column="57" />
-      <File FileName="Assets\Scripts\AI.cs" Line="43" Column="15" />
-      <File FileName="Assets\Scripts\Manager.cs" Line="22" Column="94" />
-      <File FileName="Assets\Scripts\SelectSceneHandler.cs" Line="4" Column="1" />
-      <File FileName="Assets\Scripts\Health.cs" Line="17" Column="9" />
-      <File FileName="Assets\Scripts\Messages.cs" Line="131" Column="17" />
-      <File FileName="Assets\Scripts\Processor.cs" Line="61" Column="2" />
-      <File FileName="Assets\Scripts\Attack.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\DoorControler.cs" Line="5" Column="23" />
+      <File FileName="Assets\Scripts\Manager.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\PlayerHealth.cs" Line="29" Column="4" />
+      <File FileName="Assets\Scripts\Health.cs" Line="22" Column="1" />
+      <File FileName="Assets\Scripts\Messages.cs" Line="150" Column="3" />
+      <File FileName="Assets\Scripts\Attack.cs" Line="20" Column="44" />
       <File FileName="Assets\Scripts\FacePlayer.cs" Line="1" Column="1" />
       <File FileName="Assets\Scripts\Player.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\Bullet.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\Equipment.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\Processor.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\StartSceneHandler.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\CreateSceneHandler.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\SelectSceneHandler.cs" Line="1" Column="1" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

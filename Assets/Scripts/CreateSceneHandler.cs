@@ -129,9 +129,9 @@ public class CreateSceneHandler : MonoBehaviour {
 	private void TryCreateRole(){
 		role.id = 0;
 		role.name = ipf_name.text;
-		role.level = 0;
-		role.blood = 100;
-		role.armor = 0;
+		role.level = 1;
+		role.maxHP = 100;
+		role.exp = 0;
 		role.weapon = txt_weapon.text;
 		role.attack = 1;
 		role.ammunition = tge_bullet.isOn ? -1 : int.Parse (ipf_bullet.text);
@@ -175,11 +175,7 @@ public class CreateSceneHandler : MonoBehaviour {
 		result.AsyncWaitHandle.Close();
 		if (success) {
 			Debug.Log ("Success!");
-			ShowDialog ("创建角色", "操作成功！", true, () => {
-				SceneManager.LoadScene("select");
-			}, () => {
-				SceneManager.LoadScene("select");
-			});
+			SceneManager.LoadScene("select");
 		}
 	}
 

@@ -45,21 +45,64 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+     <Compile Include="Assets\Scripts\AI.cs" />
+     <Compile Include="Assets\Scripts\Attack.cs" />
+     <Compile Include="Assets\Scripts\Bullet.cs" />
+     <Compile Include="Assets\Scripts\ChangeMuzzle.cs" />
      <Compile Include="Assets\Scripts\CreateSceneHandler.cs" />
+     <Compile Include="Assets\Scripts\DetectObstacles.cs" />
+     <Compile Include="Assets\Scripts\DoorControler.cs" />
+     <Compile Include="Assets\Scripts\Equipment.cs" />
+     <Compile Include="Assets\Scripts\Explosion.cs" />
+     <Compile Include="Assets\Scripts\FacePlayer.cs" />
+     <Compile Include="Assets\Scripts\Health.cs" />
+     <Compile Include="Assets\Scripts\Manager.cs" />
      <Compile Include="Assets\Scripts\Messages.cs" />
      <Compile Include="Assets\Scripts\Net.cs" />
      <Compile Include="Assets\Scripts\Player.cs" />
+     <Compile Include="Assets\Scripts\PlayerHealth.cs" />
      <Compile Include="Assets\Scripts\Processor.cs" />
      <Compile Include="Assets\Scripts\Role.cs" />
      <Compile Include="Assets\Scripts\SelectSceneHandler.cs" />
      <Compile Include="Assets\Scripts\SocketConnector.cs" />
      <Compile Include="Assets\Scripts\StartSceneHandler.cs" />
-     <None Include="Assets\Zombie_01_Free_v01\Docs\Zombie_01_Free_v1_READ_ME.txt" />
+     <None Include="Assets\Shaders\Fx\Rain.shader" />
+     <None Include="Assets\Shaders\BackgroundAndCharacters\RealtimeReflectionInWaterFlow.shader" />
+     <None Include="Assets\Shaders\Fx\Cursor.shader" />
+     <None Include="Assets\Shaders\Fx\ParticleAdditiveBlend.shader" />
+     <None Include="Assets\Shaders\Fx\AdditiveBlend.shader" />
+     <None Include="Assets\Shaders\BackgroundAndCharacters\RealtimeReflectionReplacement.shader" />
+     <None Include="Assets\Shaders\Fx\Additive.shader" />
+     <None Include="Assets\Shaders\BackgroundAndCharacters\ReflectiveBackgroundArbitrary.shader" />
+     <None Include="Assets\Shaders\BackgroundAndCharacters\ReflectiveBackgroundSelfIllumination.shader" />
+     <None Include="Assets\Resources\HeightDepthOfField.shader" />
+     <None Include="Assets\Resources\BlurPassesForDof.shader" />
+     <None Include="Assets\Shaders\Fx\ScreenRefract.shader" />
+     <None Include="Assets\Shaders\Fx\RainSplash.shader" />
+     <None Include="Assets\Shaders\BackgroundAndCharacters\Fallback.shader" />
+     <None Include="Assets\Shaders\Fx\Multiply.shader" />
+     <None Include="Assets\Shaders\Fx\Blend.shader" />
+     <None Include="Assets\Shaders\Fx\HeightFogBeforeTransparent.shader" />
+     <None Include="Assets\Shaders\BackgroundAndCharacters\CharacterSelfIlluminationReflective.shader" />
      <None Include="Assets\HandyHands\shaders\handyskin.shader" />
+     <None Include="Assets\Resources\ColoredNoise.shader" />
+     <None Include="Assets\Shaders\Fx\InterlacePatternBlend.shader" />
+     <None Include="Assets\Shaders\BackgroundAndCharacters\PlanarRealtimeReflection.shader" />
+     <None Include="Assets\Shaders\BackgroundAndCharacters\ReflectiveBackgroundPlanar.shader" />
+     <None Include="Assets\Shaders\BackgroundAndCharacters\EnemySelfIlluminationReflective.shader" />
+     <None Include="Assets\Shaders\BackgroundAndCharacters\AngryInclude.cginc" />
+     <None Include="Assets\Resources\MobileBloom.shader" />
+     <None Include="Assets\Shaders\Fx\ParticleMultiply.shader" />
+     <None Include="Assets\Shaders\Fx\ParticleAdditive.shader" />
      <None Include="Assets\Standard Assets\CrossPlatformInput\CrossPlatformInputGuidelines.txt" />
+     <None Include="Assets\Shaders\BackgroundAndCharacters\AlphaCutoutCheapFallback.shader" />
+     <None Include="Assets\Shaders\Fx\LaserScope.shader" />
+     <None Include="Assets\Shaders\BackgroundAndCharacters\SuperSimpleSelfIllumination.shader" />
      <None Include="Assets\Standard Assets\Characters\ThirdPersonCharacter\ThirdPersonCharacterGuidelines.txt" />
      <None Include="Assets\Standard Assets\Characters\FirstPersonCharacter\FirstPersonCharacterGuidelines.txt" />
      <None Include="Assets\Standard Assets\Characters\RollerBall\RollerBallGuidelines.txt" />
+     <None Include="Assets\Shaders\Fx\ParticleBlend.shader" />
+     <None Include="Assets\Shaders\Fx\InterlacePatternAdditive.shader" />
  <Reference Include="UnityEngine.UI">
  <HintPath>E:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>
  </Reference>

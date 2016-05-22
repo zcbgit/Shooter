@@ -85,7 +85,6 @@ public class StartSceneHandler : MonoBehaviour {
 		}
 		ShowDialog("注册", "处理中...", false);
 		player.Send (data);
-		Debug.LogError (data);
 		AsyncMethodCaller caller = new AsyncMethodCaller(Respone);
 		IAsyncResult result = caller.BeginInvoke(null, null);
 		bool success = result.AsyncWaitHandle.WaitOne (5000, true);

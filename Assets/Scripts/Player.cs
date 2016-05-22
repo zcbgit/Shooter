@@ -29,6 +29,10 @@ public class Player{
 		return connector != null && connector.IsConnected ();
 	}
 
+	public void LevelUp(JsonData data) {
+		
+	}
+
 	public bool IsLogined(){
 		return IsConnected () && isLogined;
 	}
@@ -72,8 +76,10 @@ public class Player{
 			r.id = (int)d ["roleid"];
 			r.name = (string)d ["name"];
 			r.level = (int)d ["level"];
-			r.blood = (int)d ["blood"];
-			r.armor = (int)d ["armor"];
+			r.maxHP = (int)d ["HP"];
+			r.HP = r.maxHP;
+			r.exp = (int)d ["EXP"];
+			r.nextLevelExp = (int)d ["NextLevelExp"];
 			r.weapon = (string)d ["weapon"];
 			r.attack = (int)d ["attack"];
 			r.ammunition = (int)d ["ammunition"];

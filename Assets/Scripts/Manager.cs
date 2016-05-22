@@ -1,16 +1,19 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 using UnityEngine.UI;
-using UnityEngine.SceneManagement;
 using LitJson;
 
 public class Manager : MonoBehaviour {
-	public GameObject enemyType1, enemyType2, dialog;
-	private Button m_Ok, m_cancel;
-	private Text m_headerText, m_dialogText;
+	public GameObject enemyType1, enemyType2;
+	public GameObject[] Guns;
+	public GameObject equipment;
+
 
 	private Player playerNet;
 	private GameObject playerObject;
+	private Role role;
+	private PlayerHealth ph;
+	private Attack ak;
 	private Dictionary<int, GameObject> enemies;
 	private float deltaTime = 0.2f;
 	private float latestTime = 0.0f;
@@ -19,7 +22,19 @@ public class Manager : MonoBehaviour {
 	void Start () {
 		playerNet = Player.GetInstance ();
 		playerObject = GameObject.FindGameObjectWithTag ("Player");
-		playerObject.GetComponent<Health> ().Init (playerNet.roles [playerNet.selectedRole].blood);
+		role = playerNet.roles [playerNet.selectedRole];
+		ph = playerObject.GetComponent<PlayerHealth> ();
+		ph.Init (role.maxHP, role.exp, role.nextLevelExp, role.level);
+		GameObject gun = null;
+		foreach (GameObject go in Guns) {
+			if (role.weapon.Equals (go.name)) {
+				go.SetActive(true);
+				gun = go;
+				break;
+			}
+		}
+		ak = gun.GetComponent<Attack> ();
+		ak.UpdateAmmunition (role.ammunition);
 		enemies = new Dictionary<int, GameObject> ();
 	}
 	
@@ -38,7 +53,7 @@ public class Manager : MonoBehaviour {
 				for (int i = 0; i < data.Count; ++i) {
 					int id = (int)data [i] ["id"];
 					int type = (int)data [i] ["type"];
-					float HP = (float)((double)data [i] ["HP"]);
+					int HP = (int)data [i] ["HP"];
 					float x = (float)((double)data [i] ["x"]);
 					float z = (float)((double)data [i] ["z"]);
 					switch (type) {
@@ -59,69 +74,37 @@ public class Manager : MonoBehaviour {
 
 			} else if (msgname == "UpdateHP") {
 				int id = (int)jd ["id"];
-				double HP = (double)jd ["HP"];
+				int HP = (int)jd ["HP"];
 				if (id == -1) {
 					if (HP > 0.0) {
-						playerObject.GetComponent<Health> ().UpdateHp ((float)HP);
+						ph.UpdateHp(HP);
 					} else {
-						ShowDialog ("Endless Shoot", "你已死亡，返回角色选择界面!", true);
+						ph.Die ();
 					}
 				} else {
 					if (enemies.ContainsKey (id)) {
 						if (HP > 0.0) {
-							enemies [id].GetComponent<Health> ().UpdateHp((float)HP);
+							enemies [id].GetComponent<Health> ().UpdateHp(HP);
 						} else {
 							enemies [id].GetComponent<Health> ().Die ();
 						}
 					}
 				}
+			} else if (msgname == "UpdateAmmunition") {
+				int ammunition = (int)jd ["ammunition"];
+				ak.UpdateAmmunition (ammunition);
+			} else if (msgname == "LevelUp") {
+				int exp = (int) jd["EXP"];
+				int nextLevelExp = (int) jd["NextLevelExp"];
+				int level = (int) jd ["Level"];
+				int HP = (int)jd ["HP"];
+				ph.UpdateEXP (exp, nextLevelExp, level, HP);
+			} else if (msgname == "CreateEquipment"){
+				float x = (float)((double)jd ["X"]);
+				float z = (float)((double)jd ["Z"]);
+				Instantiate (equipment, new Vector3(x, 1.0f, z), this.transform.rotation);
 			}
 		}
 	}
-
-	private void ShowDialog(string headerText, string dialogText, bool showButton = false){
-		dialog.SetActive (true);
-		if (m_headerText == null || m_dialogText == null) {
-			Text[] texts = dialog.GetComponentsInChildren<Text> ();
-			foreach (Text t in texts) {
-				switch (t.name) {
-				case "HeaderText":
-					m_headerText = t;
-					break;
-				case "DialogText":
-					m_dialogText = t;
-					break;
-				}
-			}
-		}
-		m_headerText.text = headerText;
-		m_dialogText.text = dialogText;
-
-		if (m_Ok == null || m_cancel == null) {
-			Button[] buttons = dialog.GetComponentsInChildren<Button> ();
-			foreach (Button b in buttons) {
-				switch (b.name) {
-				case "Ok":
-					m_Ok = b;
-					break;
-				case "Cancel":
-					m_cancel = b;
-					break;							
-				}
-			}
-		}
-		m_Ok.gameObject.SetActive (false);
-		m_cancel.gameObject.SetActive (false);
-		if (showButton) {
-			m_Ok.gameObject.SetActive (true);
-			m_Ok.onClick.AddListener (BackToSelectScene);
-
-			m_cancel.gameObject.SetActive (true);
-			m_cancel.onClick.AddListener (BackToSelectScene);
-		}
-	}
-
-	void BackToSelectScene(){
-		SceneManager.LoadScene ("select");
-	}
+		
 }
