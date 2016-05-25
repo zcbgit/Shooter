@@ -1,13 +1,14 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 using UnityEngine.UI;
+using System.Threading;
 using LitJson;
 
 public class Manager : MonoBehaviour {
 	public GameObject enemyType1, enemyType2;
 	public GameObject[] Guns;
 	public GameObject equipment;
-
+	public Text killedText;
 
 	private Player playerNet;
 	private GameObject playerObject;
@@ -17,6 +18,7 @@ public class Manager : MonoBehaviour {
 	private Dictionary<int, GameObject> enemies;
 	private float deltaTime = 0.2f;
 	private float latestTime = 0.0f;
+	private int killedCount = 0;
 
 	// Use this for initialization
 	void Start () {
@@ -36,6 +38,7 @@ public class Manager : MonoBehaviour {
 		ak = gun.GetComponent<Attack> ();
 		ak.UpdateAmmunition (role.ammunition);
 		enemies = new Dictionary<int, GameObject> ();
+		killedText.text = string.Format ("击杀数：{0}", killedCount);
 	}
 	
 	// Update is called once per frame
@@ -45,6 +48,10 @@ public class Manager : MonoBehaviour {
 			playerNet.Send (data);
 			latestTime = Time.time;
 		}
+		Process ();
+	}
+
+	void Process(){
 		JsonData jd = playerNet.Receive ();
 		if (jd != null) {
 			string msgname = (string)jd ["msgname"];
@@ -76,17 +83,20 @@ public class Manager : MonoBehaviour {
 				int id = (int)jd ["id"];
 				int HP = (int)jd ["HP"];
 				if (id == -1) {
-					if (HP > 0.0) {
-						ph.UpdateHp(HP);
+					if (HP > 0) {
+						ph.UpdateHp (HP);
 					} else {
+						ph.UpdateHp (0);
 						ph.Die ();
 					}
 				} else {
 					if (enemies.ContainsKey (id)) {
-						if (HP > 0.0) {
-							enemies [id].GetComponent<Health> ().UpdateHp(HP);
+						if (HP > 0) {
+							enemies [id].GetComponent<Health> ().UpdateHp (HP);
 						} else {
 							enemies [id].GetComponent<Health> ().Die ();
+							killedCount += 1;
+							killedText.text = string.Format ("击杀数：{0}", killedCount);
 						}
 					}
 				}
@@ -94,17 +104,22 @@ public class Manager : MonoBehaviour {
 				int ammunition = (int)jd ["ammunition"];
 				ak.UpdateAmmunition (ammunition);
 			} else if (msgname == "LevelUp") {
-				int exp = (int) jd["EXP"];
-				int nextLevelExp = (int) jd["NextLevelExp"];
-				int level = (int) jd ["Level"];
+				int exp = (int)jd ["EXP"];
+				int nextLevelExp = (int)jd ["NextLevelExp"];
+				int level = (int)jd ["Level"];
 				int HP = (int)jd ["HP"];
 				ph.UpdateEXP (exp, nextLevelExp, level, HP);
-			} else if (msgname == "CreateEquipment"){
+			} else if (msgname == "CreateEquipment") {
 				float x = (float)((double)jd ["X"]);
 				float z = (float)((double)jd ["Z"]);
-				Instantiate (equipment, new Vector3(x, 1.0f, z), this.transform.rotation);
+				Instantiate (equipment, new Vector3 (x, 1.0f, z), this.transform.rotation);
+			} else if (msgname == "UpdatePath") {
+				int id = (int)jd ["id"];
+				if (enemies.ContainsKey (id)) {
+					JsonData path = jd["path"];
+					enemies [id].GetComponent<AI> ().SetPath (path);
+				}
 			}
 		}
 	}
-		
 }

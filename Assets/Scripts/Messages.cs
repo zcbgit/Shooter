@@ -91,7 +91,7 @@ namespace Messages
 			this.roleId = roleId;
 			data = new List<double> ();
 			Vector3 postion = player.transform.position;
-			data.Add (postion.x);data.Add (postion.y);
+			data.Add (postion.x);data.Add (postion.z);
 		}
 	}
 
@@ -111,7 +111,7 @@ namespace Messages
 				type = 0;
 			else if ("Mech".Equals (enemy.tag))
 				type = 1;
-			data.Add (type); data.Add (id); data.Add (postion.x);data.Add (postion.y);
+			data.Add (type); data.Add (id); data.Add (postion.x);data.Add (postion.z);
 		}
 	}
 

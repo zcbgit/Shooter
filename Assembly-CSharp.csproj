@@ -47,7 +47,6 @@
   <ItemGroup>
      <Compile Include="Assets\Scripts\AI.cs" />
      <Compile Include="Assets\Scripts\Attack.cs" />
-     <Compile Include="Assets\Scripts\Bullet.cs" />
      <Compile Include="Assets\Scripts\ChangeMuzzle.cs" />
      <Compile Include="Assets\Scripts\CreateSceneHandler.cs" />
      <Compile Include="Assets\Scripts\DetectObstacles.cs" />
@@ -66,6 +65,7 @@
      <Compile Include="Assets\Scripts\SelectSceneHandler.cs" />
      <Compile Include="Assets\Scripts\SocketConnector.cs" />
      <Compile Include="Assets\Scripts\StartSceneHandler.cs" />
+     <Compile Include="Assets\Scripts\Weapon.cs" />
      <None Include="Assets\Shaders\Fx\Rain.shader" />
      <None Include="Assets\Shaders\BackgroundAndCharacters\RealtimeReflectionInWaterFlow.shader" />
      <None Include="Assets\Shaders\Fx\Cursor.shader" />

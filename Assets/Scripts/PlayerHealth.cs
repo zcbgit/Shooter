@@ -10,7 +10,7 @@ public class PlayerHealth : Health {
 	public GameObject dialog;
 	private Button m_Ok, m_cancel;
 	private Text m_headerText, m_dialogText;
-
+	private float dieTime = 0.0f;
 	private int level;
 
 	public void Init(int HP, int exp, int nextLevelExp, int level) {
@@ -31,8 +31,15 @@ public class PlayerHealth : Health {
 		}
 	}
 
+	void Update () {
+		if (dieTime != 0.0f && Time.time > dieTime + 3) {
+			BackToSelectScene ();
+		}
+	}
+
 	new public void Die() {
-		ShowDialog ("Endless Shoot", "你已死亡，返回角色选择界面!", true);
+		ShowDialog ("Endless Shoot", "你已死亡，3秒后返回角色选择界面!", false);
+		dieTime = Time.time;
 	}
 
 	private void ShowDialog(string headerText, string dialogText, bool showButton = false){

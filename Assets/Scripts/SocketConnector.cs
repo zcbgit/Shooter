@@ -104,7 +104,7 @@ public class SocketConnector
 		if (so.count > 0) {
 			for (int i = 0; i < so.count; ++i)
 				so.data.Add (so.buffer [i]);
-			Debug.Log (String.Format("receive {0} bytes to server!", so.count));
+			//Debug.Log (String.Format("receive {0} bytes to server!", so.count));
 			SplitPackage (0);
 			s.BeginReceive(so.buffer, 0, so.buffSize, SocketFlags.None, new AsyncCallback(RecviveCallback), so);
 		}
@@ -136,7 +136,7 @@ public class SocketConnector
 				JsonData jsonData = JsonMapper.ToObject(msg);
 				messages.Add (jsonData);
 				recvBuff.RemoveRange (beg, index - beg);
-				Debug.Log (String.Format("msg: {0}, recvbuff.count: {1}", msg, recvBuff.Count));
+				//Debug.Log (String.Format("msg: {0}, recvbuff.count: {1}", msg, recvBuff.Count));
 			} else {
 				break;
 			}
@@ -168,7 +168,7 @@ public class SocketConnector
 	{
 		Socket s = (Socket)ar.AsyncState;
 		int count = s.EndSend (ar);
-		Debug.Log (String.Format("Send {0} bytes to server!", count));
+		//Debug.Log (String.Format("Send {0} bytes to server!", count));
 	}
 
 	public void Disconnect(){
