@@ -53,7 +53,7 @@ public class DetectObstacles : MonoBehaviour {
 				for (int k = 0; k < n_x; ++k) {
 					sw.Write (grid [i,j,k]);
 				}
-				sw.Write ('\n');
+				sw.Write ("\r\n");
 			}
 		}
 		sw.Flush ();

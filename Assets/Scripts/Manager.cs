@@ -16,7 +16,7 @@ public class Manager : MonoBehaviour {
 	private PlayerHealth ph;
 	private Attack ak;
 	private Dictionary<int, GameObject> enemies;
-	private float deltaTime = 0.2f;
+	private float deltaTime = 10.0f;
 	private float latestTime = 0.0f;
 	private int killedCount = 0;
 
@@ -39,6 +39,7 @@ public class Manager : MonoBehaviour {
 		ak.UpdateAmmunition (role.ammunition);
 		enemies = new Dictionary<int, GameObject> ();
 		killedText.text = string.Format ("击杀数：{0}", killedCount);
+
 	}
 	
 	// Update is called once per frame
@@ -48,11 +49,14 @@ public class Manager : MonoBehaviour {
 			playerNet.Send (data);
 			latestTime = Time.time;
 		}
-		Process ();
+		JsonData jd = playerNet.Receive ();
+		while (jd != null) {
+			ProcessJD (jd);
+			jd = playerNet.Receive ();
+		}
 	}
 
-	void Process(){
-		JsonData jd = playerNet.Receive ();
+	void ProcessJD(JsonData jd){
 		if (jd != null) {
 			string msgname = (string)jd ["msgname"];
 			if (msgname == "CreateEnemy") {

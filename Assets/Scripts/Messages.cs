@@ -99,19 +99,20 @@ namespace Messages
 	public class EnemyData
 	{
 		public const string msgname = "EnemyData";
-		public string userId;
-		public List<double> data;
+		public List<double> playerData;
+		public List<double> enemyData;
 
-		public EnemyData(string userId, int id, GameObject enemy){
-			this.userId = userId;
-			data = new List<double> ();
+		public EnemyData(GameObject player, int id, GameObject enemy){
+			playerData = new List<double> ();
+			enemyData = new List<double> ();
+			playerData.Add (player.transform.position.x);playerData.Add (player.transform.position.z);
 			Vector3 postion = enemy.transform.position;
 			int type = 0;
 			if ("Spider".Equals (enemy.tag))
 				type = 0;
 			else if ("Mech".Equals (enemy.tag))
 				type = 1;
-			data.Add (type); data.Add (id); data.Add (postion.x);data.Add (postion.z);
+			enemyData.Add (type); enemyData.Add (id); enemyData.Add (postion.x);enemyData.Add (postion.z);
 		}
 	}
 

@@ -49,8 +49,8 @@ public class Processor {
 		return JsonMapper.ToJson (data);		
 	}
 
-	public static string C2SEnemyData(string userId, int id, GameObject enemy){
-		EnemyData data = new EnemyData (userId, id, enemy);
+	public static string C2SEnemyData(GameObject player, int id, GameObject enemy){
+		EnemyData data = new EnemyData (player, id, enemy);
 		return JsonMapper.ToJson (data);		
 	}
 

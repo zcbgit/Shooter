@@ -15,7 +15,7 @@ public class AI: MonoBehaviour {
 	private Animator animator;
 	private float preAttackTime;
 	private Player net;
-	private float deltaSendTime = 5.0f;
+	private float deltaSendTime = 2.0f;
 	private float preSendTime = 0.0f;
 	private int slot;
 
@@ -39,12 +39,6 @@ public class AI: MonoBehaviour {
 	}
 
 	void FixedUpdate (){
-		if (preSendTime == 0.0f || Time.time > preSendTime + deltaSendTime) {
-			string data = Processor.C2SEnemyData (net.userId, id, this.gameObject);
-			net.Send (data);
-			preSendTime = Time.time;
-		}
-
 		if (Vector3.Distance (player.transform.position, this.transform.position) < 10.0f) {
 			Vector3 target = new Vector3(player.transform.position.x, this.transform.position.y, player.transform.position.z);
 			Vector3 dir = target - this.transform.position;
@@ -54,14 +48,23 @@ public class AI: MonoBehaviour {
 				float angle = Vector3.Angle (this.transform.forward, dir);
 				if (angle > 10.0f) {
 					Vector3 cross = Vector3.Cross (this.transform.forward, dir);
-					animator.SetBool ("walk", false);
 					if (cross.y > 0) {
-						animator.SetBool ("left", false);
-						animator.SetBool ("right", true);
+						if (this.tag.Equals ("Mech")) {
+							animator.SetBool ("walk", false);
+							animator.SetBool ("left", false);
+							animator.SetBool ("right", true);
+						} else if (this.tag.Equals ("Spider")) {
+							animator.SetBool ("walk", true);
+						}
 						this.transform.Rotate (Vector3.up, angle > 1.0 ? 1.0f : angle);
 					} else {
-						animator.SetBool ("right", false);
-						animator.SetBool ("left", true);
+						if (this.tag.Equals ("Mech")) {
+							animator.SetBool ("walk", false);
+							animator.SetBool ("right", false);
+							animator.SetBool ("left", true);
+						} else if (this.tag.Equals ("Spider")) {
+							animator.SetBool ("walk", true);
+						}
 						this.transform.Rotate (Vector3.up, angle > 1.0 ? -1.0f : -angle);
 					}
 				} else {
@@ -71,13 +74,18 @@ public class AI: MonoBehaviour {
 					Attack ();
 				}
 			}
-		} else if (Vector3.Distance (player.transform.position, this.transform.position) > 30.0f) {
+		} else if (Vector3.Distance (player.transform.position, this.transform.position) > 25.0f) {
 			animator.SetBool ("walk", false);
 			animator.SetBool ("right", false);
 			animator.SetBool ("left", false);
 			path.Clear ();
 			index = 1;
 		} else {
+			if (preSendTime == 0.0f || Time.time > preSendTime + deltaSendTime) {
+				string data = Processor.C2SEnemyData (player, id, this.gameObject);
+				net.Send (data);
+				preSendTime = Time.time;
+			}
 			if (path.Count > 0 && index < path.Count) {
 				Vector3 target = path [index];
 				Vector3 dir = target - this.transform.position;

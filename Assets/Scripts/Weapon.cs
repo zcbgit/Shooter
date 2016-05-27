@@ -16,17 +16,27 @@ public class Weapon : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update () {
-		this.transform.position += this.transform.forward * speed * Time.deltaTime;
-		maxDistance -= speed * Time.deltaTime;
+		RaycastHit hitInfo;
+		if (Physics.Raycast (this.transform.position, this.transform.forward, out hitInfo, speed * Time.deltaTime)) {
+			if (destroyEffect != null) {
+				Instantiate (destroyEffect, this.transform.position, this.transform.rotation);
+			}
+			Destroy (this.gameObject);
+			switch (hitInfo.collider.tag) {
+			case "Player":
+				hitInfo.collider.gameObject.GetComponent<PlayerHealth> ().Hit (this.tag);
+				break;
+			case "Mech":
+			case "Spider":
+				hitInfo.collider.gameObject.GetComponent<Health> ().Hit (this.tag);
+				break;
+			}
+		} else {
+			this.transform.position += this.transform.forward * speed * Time.deltaTime;
+			maxDistance -= speed * Time.deltaTime;
+		}
 		if (Time.time > timeout || maxDistance < 0) {
 			Destroy (this.gameObject);
 		}
-	}
-
-	void OnTriggerEnter (Collider other) {
-		if (destroyEffect != null) {
-			Instantiate (destroyEffect, this.transform.position, this.transform.rotation);
-		}
-		Destroy (this.gameObject);
 	}
 }

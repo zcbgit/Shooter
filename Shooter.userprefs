@@ -1,16 +1,18 @@
 ﻿<Properties StartupItem="Assembly-CSharp.csproj">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\AI.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\Weapon.cs">
     <Files>
-      <File FileName="Assets\Scripts\AI.cs" Line="55" Column="19" />
-      <File FileName="Assets\Scripts\Health.cs" Line="67" Column="3" />
-      <File FileName="Assets\Scripts\Manager.cs" Line="51" Column="14" />
+      <File FileName="Assets\Scripts\Health.cs" Line="28" Column="12" />
+      <File FileName="Assets\Scripts\Manager.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\DetectObstacles.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\AI.cs" Line="1" Column="1" />
       <File FileName="Assets\Scripts\PlayerHealth.cs" Line="1" Column="1" />
       <File FileName="Assets\Scripts\Messages.cs" Line="1" Column="1" />
       <File FileName="Assets\Scripts\Attack.cs" Line="1" Column="1" />
       <File FileName="Assets\Scripts\Processor.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\SocketConnector.cs" Line="134" Column="36" />
-      <File FileName="Assets\Scripts\Weapon.cs" Line="28" Column="30" />
+      <File FileName="Assets\Scripts\SocketConnector.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\Weapon.cs" Line="41" Column="3" />
+      <File FileName="Assets\Scripts\CreateSceneHandler.cs" Line="1" Column="1" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

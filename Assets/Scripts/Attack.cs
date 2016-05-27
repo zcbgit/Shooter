@@ -28,7 +28,7 @@ public class Attack : MonoBehaviour {
 			TextAmmunition.text = string.Format ("弹药量：无限");
 		}
 		this.ammunition += value;
-		TextAmmunition.text = string.Format ("弹药量：{0}", ammunition);
+		TextAmmunition.text = string.Format ("弹药量：{0}", this.ammunition);
 	}
 	
 	// Update is called once per frame

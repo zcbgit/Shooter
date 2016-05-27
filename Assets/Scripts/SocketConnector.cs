@@ -6,6 +6,7 @@ using System.Net.Sockets;
 using System.Threading;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
+using System.Globalization;
 using LitJson;
 
 public class StateObject
@@ -136,6 +137,7 @@ public class SocketConnector
 				JsonData jsonData = JsonMapper.ToObject(msg);
 				messages.Add (jsonData);
 				recvBuff.RemoveRange (beg, index - beg);
+				//Debug.LogFormat("{0}--recv {1} bytes to server!", string.Format("{0:mm:ss:ffff}",DateTime.Now), msg);
 				//Debug.Log (String.Format("msg: {0}, recvbuff.count: {1}", msg, recvBuff.Count));
 			} else {
 				break;
@@ -149,7 +151,7 @@ public class SocketConnector
 			Closed ();
 			return;
 		}
-
+		//Debug.LogFormat("{0}--Send {1} bytes to server!", string.Format("{0:mm:ss:ffff}",DateTime.Now), str);
 		try {
 			List<byte> sendBuff = new List<byte> ();
 			byte[] msg = Encoding.UTF8.GetBytes (str);
@@ -158,6 +160,7 @@ public class SocketConnector
 				sendBuff.Add(len [HEADLEN - 1 - i]);
 
 			sendBuff.AddRange (msg);
+			//clientSocket.Send(sendBuff.ToArray());
 			clientSocket.BeginSend (sendBuff.ToArray(), 0,  sendBuff.Count, SocketFlags.None, new AsyncCallback (sendCallback), clientSocket);
 		} catch {
 			Debug.Log ("send message error");
@@ -168,7 +171,6 @@ public class SocketConnector
 	{
 		Socket s = (Socket)ar.AsyncState;
 		int count = s.EndSend (ar);
-		//Debug.Log (String.Format("Send {0} bytes to server!", count));
 	}
 
 	public void Disconnect(){

@@ -8,7 +8,7 @@ public class PlayerHealth : Health {
 	public Text LevelText;
 
 	public GameObject dialog;
-	private Button m_Ok, m_cancel;
+	private Button m_cancel;
 	private Text m_headerText, m_dialogText;
 	private float dieTime = 0.0f;
 	private int level;
@@ -38,11 +38,11 @@ public class PlayerHealth : Health {
 	}
 
 	new public void Die() {
-		ShowDialog ("Endless Shoot", "你已死亡，3秒后返回角色选择界面!", false);
+		ShowDialog ("Endless Shoot", "你已死亡，3秒后返回角色选择界面!");
 		dieTime = Time.time;
 	}
 
-	private void ShowDialog(string headerText, string dialogText, bool showButton = false){
+	private void ShowDialog(string headerText, string dialogText){
 		dialog.SetActive (true);
 		if (m_headerText == null || m_dialogText == null) {
 			Text[] texts = dialog.GetComponentsInChildren<Text> ();
@@ -59,29 +59,6 @@ public class PlayerHealth : Health {
 		}
 		m_headerText.text = headerText;
 		m_dialogText.text = dialogText;
-
-		if (m_Ok == null || m_cancel == null) {
-			Button[] buttons = dialog.GetComponentsInChildren<Button> ();
-			foreach (Button b in buttons) {
-				switch (b.name) {
-				case "Ok":
-					m_Ok = b;
-					break;
-				case "Cancel":
-					m_cancel = b;
-					break;							
-				}
-			}
-		}
-		m_Ok.gameObject.SetActive (false);
-		m_cancel.gameObject.SetActive (false);
-		if (showButton) {
-			m_Ok.gameObject.SetActive (true);
-			m_Ok.onClick.AddListener (BackToSelectScene);
-
-			m_cancel.gameObject.SetActive (true);
-			m_cancel.onClick.AddListener (BackToSelectScene);
-		}
 	}
 
 	void BackToSelectScene(){
