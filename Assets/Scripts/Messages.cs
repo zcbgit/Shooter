@@ -149,5 +149,16 @@ namespace Messages
 	{
 		public const string msgname = "GetEquipment";
 	}
+
+	[System.Serializable]
+	public class Logout
+	{
+		public const string msgname = "Logout";
+		public string userId;
+
+		public Logout(string userId){
+			this.userId = userId;
+		}
+	}
 }
 

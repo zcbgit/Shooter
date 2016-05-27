@@ -3,13 +3,17 @@ using System.Collections.Generic;
 using UnityEngine.UI;
 using System.Threading;
 using LitJson;
+using UnityEngine.SceneManagement;
 
 public class Manager : MonoBehaviour {
 	public GameObject enemyType1, enemyType2;
 	public GameObject[] Guns;
 	public GameObject equipment;
 	public Text killedText;
+	public GameObject dialog;
+	public GameObject menu;
 
+	private Text m_headerText, m_dialogText;
 	private Player playerNet;
 	private GameObject playerObject;
 	private Role role;
@@ -19,9 +23,12 @@ public class Manager : MonoBehaviour {
 	private float deltaTime = 10.0f;
 	private float latestTime = 0.0f;
 	private int killedCount = 0;
+	private float dieTime = 0.0f;
+	private bool isPause = false;
 
 	// Use this for initialization
 	void Start () {
+		InitMenu ();
 		playerNet = Player.GetInstance ();
 		playerObject = GameObject.FindGameObjectWithTag ("Player");
 		role = playerNet.roles [playerNet.selectedRole];
@@ -41,9 +48,66 @@ public class Manager : MonoBehaviour {
 		killedText.text = string.Format ("击杀数：{0}", killedCount);
 
 	}
+
+	void InitMenu() {
+		menu.SetActive (false);
+		Button[] buttons = menu.GetComponentsInChildren<Button> ();
+		foreach (Button b in buttons){
+			switch (b.name){
+			case "resume":
+				b.onClick.AddListener (() => {
+					menu.SetActive (false);
+					isPause = false;
+					Time.timeScale = 1.0f;
+				});
+				break;
+			case "select":
+				b.onClick.AddListener (() => {
+					Cursor.lockState = CursorLockMode.None;
+					Cursor.visible = true;
+					SceneManager.LoadScene ("select");
+				});
+				break;	
+			case "logout":
+				b.onClick.AddListener (() => {
+					Cursor.lockState = CursorLockMode.None;
+					Cursor.visible = true;
+					playerNet.Logout();
+					SceneManager.LoadScene ("start");
+				});
+				break;
+			case "quite":
+				b.onClick.AddListener (() => {
+					Application.Quit();
+				});
+				break;
+			}				
+		}
+	}
 	
 	// Update is called once per frame
 	void Update () {
+		if (Input.GetKeyDown (KeyCode.Escape)) {
+			if (!isPause) {
+				
+				Time.timeScale = 0.0f;
+				isPause = true;
+				menu.SetActive (true);
+				Cursor.lockState = CursorLockMode.None;
+				Cursor.visible = true;
+			} else {
+				menu.SetActive (false);
+				Time.timeScale = 1.0f;
+				isPause = false;
+			}
+		}
+
+		if (dieTime != 0.0f && Time.time > dieTime + 3) {
+			Cursor.lockState = CursorLockMode.None;
+			Cursor.visible = true;
+			SceneManager.LoadScene ("select");
+		}
+
 		if (latestTime == 0.0f || Time.time > latestTime + deltaTime) {
 			string data = Processor.C2SPlayerData(playerNet.userId, playerNet.roleId, playerObject);
 			playerNet.Send (data);
@@ -91,6 +155,8 @@ public class Manager : MonoBehaviour {
 						ph.UpdateHp (HP);
 					} else {
 						ph.UpdateHp (0);
+						dieTime = Time.time;
+						ShowDialog ("Endless Shoot", "你已死亡，将在3秒后返回！");
 						ph.Die ();
 					}
 				} else {
@@ -125,5 +191,24 @@ public class Manager : MonoBehaviour {
 				}
 			}
 		}
+	}
+
+	private void ShowDialog(string headerText, string dialogText){
+		dialog.SetActive (true);
+		if (m_headerText == null || m_dialogText == null) {
+			Text[] texts = dialog.GetComponentsInChildren<Text> ();
+			foreach (Text t in texts) {
+				switch (t.name) {
+				case "HeaderText":
+					m_headerText = t;
+					break;
+				case "DialogText":
+					m_dialogText = t;
+					break;
+				}
+			}
+		}
+		m_headerText.text = headerText;
+		m_dialogText.text = dialogText;
 	}
 }

@@ -61,14 +61,13 @@ public class SocketConnector
 		IAsyncResult result = clientSocket.BeginConnect (ip, port, null, null);
 		result.AsyncWaitHandle.WaitOne (3000, true);
 		if (!result.IsCompleted) {
-			Closed ();
+			Close ();
 			Debug.Log ("Connect Time Out");
 			clientSocket.EndConnect (result);
 			return false;
 		} else {
 			if (!clientSocket.Connected) {
 				Debug.Log ("Connect failed!");
-				clientSocket.EndConnect (result);
 				return false;
 			}
 			clientSocket.EndConnect (result);
@@ -81,7 +80,7 @@ public class SocketConnector
 	private void Receive ()
 	{
 		if (clientSocket == null || !clientSocket.Connected) {
-			Closed ();
+			Close ();
 			return;
 		}
 
@@ -110,7 +109,7 @@ public class SocketConnector
 			s.BeginReceive(so.buffer, 0, so.buffSize, SocketFlags.None, new AsyncCallback(RecviveCallback), so);
 		}
 		else {
-			Closed ();
+			Close ();
 		}
 		
 	}
@@ -148,7 +147,7 @@ public class SocketConnector
 	public void Send (string str)
 	{
 		if (clientSocket == null || !clientSocket.Connected) {
-			Closed ();
+			Close ();
 			return;
 		}
 		//Debug.LogFormat("{0}--Send {1} bytes to server!", string.Format("{0:mm:ss:ffff}",DateTime.Now), str);
@@ -173,19 +172,13 @@ public class SocketConnector
 		int count = s.EndSend (ar);
 	}
 
-	public void Disconnect(){
+	public void Close(){
 		if (clientSocket != null && clientSocket.Connected) {
 			clientSocket.Shutdown (SocketShutdown.Both);
 			clientSocket.Disconnect (true);
 			clientSocket.Close ();
+			clientSocket = null;
 		}
-	}
-
-	//close Socket
-	public void Closed ()
-	{
-		Disconnect ();
-		clientSocket = null;
 	}
 
 }

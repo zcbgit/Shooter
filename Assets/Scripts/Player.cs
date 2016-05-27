@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+﻿ using UnityEngine;
 using System.Collections.Generic;
 using LitJson;
 
@@ -90,11 +90,7 @@ public class Player{
 
 	public void Disconnect(){
 		Logout ();
-		connector.Disconnect ();
-	}
-
-	public void Closed(){
-		connector.Closed ();
+		connector.Close ();
 	}
 
 	public Role GetSelectedRole() {

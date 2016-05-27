@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using LitJson;
 
 public class AI: MonoBehaviour {
-	public bool enableAttack;
 	public int id;
 	public GameObject weapon;
 	public GameObject[] WeaponSlot;
@@ -18,12 +17,10 @@ public class AI: MonoBehaviour {
 	private float deltaSendTime = 2.0f;
 	private float preSendTime = 0.0f;
 	private int slot;
-
-	private LineRenderer liner1;
+	private FootStepSound sound;
 
 	// Use this for initialization
 	void Start () {
-		enableAttack = false;
 		path = new List<Vector3> ();
 		index = 1;
 		slot = 0;
@@ -31,11 +28,7 @@ public class AI: MonoBehaviour {
 		player = GameObject.FindGameObjectWithTag ("Player");
 		animator = this.GetComponentInChildren<Animator> ();
 		net = Player.GetInstance ();
-
-//		liner1 = this.gameObject.AddComponent<LineRenderer> () as LineRenderer;
-//		liner1.SetWidth (0.1f, 0.1f);
-//		liner1.SetColors(Color.red, Color.yellow);
-//		liner1.SetVertexCount (4);
+		sound = GetComponentInChildren<FootStepSound> ();
 	}
 
 	void FixedUpdate (){
@@ -73,6 +66,7 @@ public class AI: MonoBehaviour {
 					animator.SetBool ("left", false);
 					Attack ();
 				}
+				sound.Play();
 			}
 		} else if (Vector3.Distance (player.transform.position, this.transform.position) > 25.0f) {
 			animator.SetBool ("walk", false);
@@ -80,6 +74,7 @@ public class AI: MonoBehaviour {
 			animator.SetBool ("left", false);
 			path.Clear ();
 			index = 1;
+			sound.Pause();
 		} else {
 			if (preSendTime == 0.0f || Time.time > preSendTime + deltaSendTime) {
 				string data = Processor.C2SEnemyData (player, id, this.gameObject);
@@ -112,6 +107,7 @@ public class AI: MonoBehaviour {
 					animator.SetBool ("walk", true);
 					this.transform.position = Vector3.MoveTowards (this.gameObject.transform.position, target, 0.025f);
 				}
+				sound.Play();
 			}
 		}
 	}
