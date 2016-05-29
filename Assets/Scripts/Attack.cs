@@ -2,6 +2,7 @@
 using System.Collections;
 using UnityEngine.UI;
 
+// 玩家攻击控制脚本。
 public class Attack : MonoBehaviour {
 	public GameObject muzzleFlash;
 	public GameObject Bullet;
@@ -26,12 +27,13 @@ public class Attack : MonoBehaviour {
 	public void UpdateAmmunition(int value){
 		if (value == -1) {
 			TextAmmunition.text = string.Format ("弹药量：无限");
+		} else {
+			this.ammunition += value;
+			TextAmmunition.text = string.Format ("弹药量：{0}", this.ammunition);
 		}
-		this.ammunition += value;
-		TextAmmunition.text = string.Format ("弹药量：{0}", this.ammunition);
 	}
 	
-	// Update is called once per frame
+	// 玩家按下鼠标左键，弹药数不为0时，实例化武器对象。
 	void Update ()
 	{
 		if (Input.GetMouseButtonDown (0)) {

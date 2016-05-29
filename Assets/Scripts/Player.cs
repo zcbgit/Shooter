@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using LitJson;
 
+//玩家类，管理玩家信息，userid，角色等。
 public class Player{
 	public string userId;
 	public List<Role> roles;

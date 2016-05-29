@@ -5,6 +5,7 @@ using System.Threading;
 using LitJson;
 using UnityEngine.SceneManagement;
 
+// 在游戏场景中，服务器的所有相应都由该脚本处理。
 public class Manager : MonoBehaviour {
 	public GameObject enemyType1, enemyType2;
 	public GameObject[] Guns;
@@ -19,7 +20,7 @@ public class Manager : MonoBehaviour {
 	private Role role;
 	private PlayerHealth ph;
 	private Attack ak;
-	private Dictionary<int, GameObject> enemies;
+	private Dictionary<int, GameObject> enemies; // 记录怪物信息的字典类，key是怪物的id
 	private float deltaTime = 10.0f;
 	private float latestTime = 0.0f;
 	private int killedCount = 0;
@@ -87,6 +88,7 @@ public class Manager : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+		// 按ESC键，弹出菜单。
 		if (Input.GetKeyDown (KeyCode.Escape)) {
 			if (!isPause) {
 				
@@ -102,12 +104,13 @@ public class Manager : MonoBehaviour {
 			}
 		}
 
+		// 玩家死亡，3秒后返回角色选择场景
 		if (dieTime != 0.0f && Time.time > dieTime + 3) {
 			Cursor.lockState = CursorLockMode.None;
 			Cursor.visible = true;
 			SceneManager.LoadScene ("select");
 		}
-
+		// 定时发送玩家位置信息
 		if (latestTime == 0.0f || Time.time > latestTime + deltaTime) {
 			string data = Processor.C2SPlayerData(playerNet.userId, playerNet.roleId, playerObject);
 			playerNet.Send (data);
@@ -119,7 +122,7 @@ public class Manager : MonoBehaviour {
 			jd = playerNet.Receive ();
 		}
 	}
-
+	// 处理响应
 	void ProcessJD(JsonData jd){
 		if (jd != null) {
 			string msgname = (string)jd ["msgname"];

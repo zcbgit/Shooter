@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+// 控制门动画的脚本
 public class DoorControler : MonoBehaviour {
 	public bool isOpened;
 	private AudioSource doorSound;

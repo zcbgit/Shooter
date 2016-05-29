@@ -7,6 +7,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.Events;
 using LitJson;
 
+// 角色选择界面脚本，创建、删除角色，选择角色进入游戏等。
 public class SelectSceneHandler : MonoBehaviour {
 	public GameObject itemGroup;
 	public GameObject dialogPanel;
@@ -19,6 +20,8 @@ public class SelectSceneHandler : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+		Cursor.lockState = CursorLockMode.None;
+		Cursor.visible = true;
 		HideDialog ();
 		player = Player.GetInstance ();
 		InitItems ();
@@ -101,7 +104,7 @@ public class SelectSceneHandler : MonoBehaviour {
 		player.Send (data);
 		AsyncMethodCaller caller = new AsyncMethodCaller(EnterGameRespone);
 		IAsyncResult result = caller.BeginInvoke(null, null);
-		bool success = result.AsyncWaitHandle.WaitOne (5000, true);
+		bool success = result.AsyncWaitHandle.WaitOne (10000, true);
 		if (!success) {
 			Debug.Log ("Time Out");
 			ShowDialog ("进入游戏", "操作超时", true, () => {
@@ -143,7 +146,7 @@ public class SelectSceneHandler : MonoBehaviour {
 		player.Send (data);
 		AsyncMethodCaller caller = new AsyncMethodCaller(DeleteRoleRespone);
 		IAsyncResult result = caller.BeginInvoke(null, null);
-		bool success = result.AsyncWaitHandle.WaitOne (5000, true);
+		bool success = result.AsyncWaitHandle.WaitOne (10000, true);
 		if (!success) {
 			Debug.Log ("Time Out");
 			ShowDialog ("删除角色", "操作超时", true, () => {
@@ -260,7 +263,7 @@ public class SelectSceneHandler : MonoBehaviour {
 		player.Send (data);
 		AsyncMethodCaller caller = new AsyncMethodCaller(AcquireRoles);
 		IAsyncResult result = caller.BeginInvoke(null, null);
-		bool success = result.AsyncWaitHandle.WaitOne (5000, true);
+		bool success = result.AsyncWaitHandle.WaitOne (10000, true);
 		if (!success) {
 			Debug.Log ("Time Out");
 			ShowDialog ("获取角色", "获取已创建角色失败！", true, () => {
@@ -277,7 +280,7 @@ public class SelectSceneHandler : MonoBehaviour {
 				if (i < roles.Count) {
 					Text[] texts = item.GetComponentsInChildren<Text> ();
 					string name = roles [i].name;
-					string description = string.Format("level:{0,4}   HP:{1}\narmor:{2,3}   weapon:{3}\nattack:{4,3}   ammunition:{5}",roles [i].level, roles [i].maxHP, roles [i].exp, roles [i].weapon, roles [i].attack, roles [i].ammunition);
+					string description = string.Format("level:{0,4}   HP:{1}\nEXP:{2,3}   weapon:{3}\nattack:{4,3}   ammunition:{5}",roles [i].level, roles [i].maxHP, roles [i].exp, roles [i].weapon, roles [i].attack, roles [i].ammunition == -1 ? "无限" : roles [i].ammunition.ToString());
 					foreach (Text t in texts) {
 						switch (t.name) {
 						case "name":

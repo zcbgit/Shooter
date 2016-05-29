@@ -9,6 +9,7 @@ using System.Runtime.InteropServices;
 using System.Globalization;
 using LitJson;
 
+// 异步操作的状态类
 public class StateObject
 {
 	public Socket workSocket = null;
@@ -29,6 +30,7 @@ public class StateObject
 	}
 }
 
+// socket操作类，单例模式
 public class SocketConnector
 {
 	private string ip;
@@ -40,6 +42,7 @@ public class SocketConnector
 
 	private static SocketConnector instance =  new SocketConnector ();
 
+	// 单例模式，保证所有与服务器的交互都通过同一个socket进行。
 	public static SocketConnector GetInstance ()
 	{
 		return instance;
@@ -56,10 +59,11 @@ public class SocketConnector
 		return clientSocket.Connected;
 	}
 
+	// 连接，10s超时
 	public bool Connect(string ip, int port)
 	{
 		IAsyncResult result = clientSocket.BeginConnect (ip, port, null, null);
-		result.AsyncWaitHandle.WaitOne (3000, true);
+		result.AsyncWaitHandle.WaitOne (10000, true);
 		if (!result.IsCompleted) {
 			Close ();
 			Debug.Log ("Connect Time Out");
@@ -77,6 +81,7 @@ public class SocketConnector
 		}
 	}
 
+	// 异步接收
 	private void Receive ()
 	{
 		if (clientSocket == null || !clientSocket.Connected) {
@@ -114,6 +119,7 @@ public class SocketConnector
 		
 	}
 
+	// 对接收的消息解包
 	private void SplitPackage (int beg)
 	{
 		byte[] head = new byte[HEADLEN];
@@ -144,6 +150,7 @@ public class SocketConnector
 		}
 	}
 
+	// 异步发送
 	public void Send (string str)
 	{
 		if (clientSocket == null || !clientSocket.Connected) {

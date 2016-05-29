@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+// 子弹导弹等对象的控制脚本，与其他物体的碰撞通过射线检测。
 public class Weapon : MonoBehaviour {
 	public float speed = 10.0f;
 	public float lifetime = 1.0f;
@@ -16,6 +17,7 @@ public class Weapon : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update () {
+		// 物体位置变化较快，通过射线检测。
 		RaycastHit hitInfo;
 		if (Physics.Raycast (this.transform.position, this.transform.forward, out hitInfo, speed * Time.deltaTime)) {
 			if (destroyEffect != null) {

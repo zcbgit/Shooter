@@ -2,6 +2,7 @@
 using System.Collections;
 using UnityEngine.UI;
 
+// Health类的超类，管理玩家血量，等级，经验等。
 public class PlayerHealth : Health {
 	public Slider EXPSlider;
 	public Text LevelText;

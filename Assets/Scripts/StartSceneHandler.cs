@@ -6,6 +6,7 @@ using UnityEngine.EventSystems;
 using System;
 using LitJson;
 
+// 开始界面控制脚本
 public class StartSceneHandler : MonoBehaviour {
 	public Button m_btnLogin;
 	public Button m_btnRigister;
@@ -20,6 +21,8 @@ public class StartSceneHandler : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+		Cursor.lockState = CursorLockMode.None;
+		Cursor.visible = true;
 		HideDialog ();
 		m_btnLogin.onClick.AddListener (TryLogin);
 		m_btnRigister.onClick.AddListener (TryRegister);
@@ -47,7 +50,7 @@ public class StartSceneHandler : MonoBehaviour {
 		player.Send (data);
 		AsyncMethodCaller caller = new AsyncMethodCaller(Respone);
 		IAsyncResult result = caller.BeginInvoke(null, null);
-		bool success = result.AsyncWaitHandle.WaitOne (5000, true);
+		bool success = result.AsyncWaitHandle.WaitOne (10000, true);
 		if (!success) {
 			Debug.Log ("Time Out");
 			ShowDialog ("登陆", "登陆超时", true);
@@ -87,7 +90,7 @@ public class StartSceneHandler : MonoBehaviour {
 		player.Send (data);
 		AsyncMethodCaller caller = new AsyncMethodCaller(Respone);
 		IAsyncResult result = caller.BeginInvoke(null, null);
-		bool success = result.AsyncWaitHandle.WaitOne (5000, true);
+		bool success = result.AsyncWaitHandle.WaitOne (10000, true);
 		if (!success) {
 			ShowDialog ("注册", "注册超时", true);
 		} else {

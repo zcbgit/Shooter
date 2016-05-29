@@ -3,6 +3,7 @@ using System.Collections;
 using System.IO;
 using System.Text;
 
+// 生成场景网格地图
 public class DetectObstacles : MonoBehaviour {
 	public float beg_x,beg_y, beg_z, end_x, end_y, end_z;
 	public string filename;

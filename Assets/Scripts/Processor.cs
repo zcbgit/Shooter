@@ -4,6 +4,7 @@ using System.Reflection;
 using LitJson;
 using Messages;
 
+// 根据不同消息类型，使用LitJson将消息封装成json格式串
 public class Processor {
 
 	public static string C2SLogin(string userId, string password)
